@@ -1,0 +1,47 @@
+- pipenv install psycopg2-binary and gunicorn
+- install postgresql
+- sudo service postgresql start
+  -(for wsl may need to create a psql user profile)
+- create db on render
+- copy/paste external database uri
+  -(will need to change uri from postgres to postgresql)
+  - change database uri in app or config to os.environ.get
+- test with flask shell (should be no users and slight lag now)
+
+- pipenv requirements > requirements.txt
+
+- build production react site
+  - add dist/build folder to .gitignore if not already there
+- add static routes to flask:
+
+```python
+
+app = Flask(
+    __name__,
+    static_url_path='',
+    static_folder='../client/dist',
+    template_folder='../client/dist'
+)
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("index.html")
+
+```
+
+- quickly test things work with gunicorn app:app on localhost:8000
+
+- add commit push to `production` branch
+
+- create new web service
+  - connect via github
+  - choose deployment branch
+  - build command: pip install -r requirements.txt && npm install --prefix client && npm run build --prefix client
+  -start command: gunicorn --chdir server app:app
+- change environmental variables
+  - add in any currently in your .env
+    - you may change to internal postgres uri to speed things up for production
+  - also... PYTHON_VERSION=3.8.13
+
+- wait for render to boot up service and debug as necessary
+- any test items already seeded in the database should show up now!
