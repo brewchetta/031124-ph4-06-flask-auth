@@ -13,6 +13,8 @@ importlib-metadata = "6.0.0"
 importlib-resources = "5.10.0"
 flask-bcrypt = "*"
 python-dotenv = "*"
+psycopg2-binary = "*"
+gunicorn = "*"
 
 [dev-packages]
 

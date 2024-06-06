@@ -2,7 +2,7 @@
 
 import os
 from flask_bcrypt import Bcrypt
-from flask import Flask, jsonify, request, session
+from flask import Flask, jsonify, request, session, render_template
 from flask_migrate import Migrate
 
 from models import db, User, Note
@@ -11,9 +11,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    static_url_path='',
+    static_folder='../client/dist',
+    template_folder='../client/dist'
+)
+
 app.secret_key = os.environ.get('SECRET_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('POSTGRES_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
 
@@ -25,6 +31,9 @@ db.init_app(app)
 
 URL_PREFIX = '/api'
 
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("index.html")
 
 # USER SIGNUP #
 
